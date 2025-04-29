@@ -4,6 +4,7 @@ import orders from "./orders.js";
 import distributors from "./distributors.js";
 import users from "./users.js";
 import managers from "./managers.js";
+import customers from "./customers.js";
 
 const db = {
   products,
@@ -12,6 +13,7 @@ const db = {
   distributors,
   users,
   managers,
+  customers,
 };
 
 export default db;

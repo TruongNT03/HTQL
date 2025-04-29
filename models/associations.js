@@ -48,3 +48,11 @@ db.orders.belongsTo(db.products, {
 db.products.hasMany(db.orders, {
   foreignKey: "product_id",
 });
+
+// customer 1-n order
+db.orders.belongsTo(db.customers, {
+  foreignKey: "customer_id",
+});
+db.customers.hasMany(db.orders, {
+  foreignKey: "customer_id",
+});
