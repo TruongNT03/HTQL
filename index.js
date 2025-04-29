@@ -1,0 +1,30 @@
+import express from "express";
+import dotenv from "dotenv";
+import cors from "cors";
+
+import { connectToDatabase } from "./dbConnect.js";
+import "./models/associations.js";
+import AuthRouter from "./routes/auth.js";
+
+dotenv.config();
+
+const app = express();
+
+app.use(express.json());
+app.use(cors());
+
+//router
+
+app.use("/api/v1/auth", AuthRouter);
+
+connectToDatabase();
+
+const { PORT = 8080 } = process.env;
+
+app.get("/api/v1", (req, res) => {
+  return res.status(200).json("GET at /api/v1");
+});
+
+app.listen(PORT, () => {
+  console.log(`Server listen at PORT: ${PORT}`);
+});
