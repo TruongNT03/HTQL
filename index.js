@@ -5,6 +5,7 @@ import cors from "cors";
 import { connectToDatabase } from "./dbConnect.js";
 import "./models/associations.js";
 import AuthRouter from "./routes/auth.js";
+import ManagerRouter from "./routes/Manager.js";
 import DistributorRouter from "./routes/distributor.js";
 import ProductrRouter from "./routes/product.js";
 
@@ -18,6 +19,7 @@ app.use(cors());
 //router
 
 app.use("/api/v1/auth", AuthRouter);
+app.use("/api/v1/manager", ManagerRouter);
 app.use("/api/v1/distributor", DistributorRouter);
 app.use("/api/v1/product", ProductrRouter);
 
