@@ -15,6 +15,9 @@ users.init(
     fullname: {
       type: DataTypes.STRING,
     },
+    role: {
+      type: DataTypes.STRING,
+    },
     team_id: {
       type: DataTypes.INTEGER,
     },
