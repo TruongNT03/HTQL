@@ -5,6 +5,8 @@ import cors from "cors";
 import { connectToDatabase } from "./dbConnect.js";
 import "./models/associations.js";
 import AuthRouter from "./routes/auth.js";
+import DistributorRouter from "./routes/distributor.js";
+import ProductrRouter from "./routes/product.js";
 
 dotenv.config();
 
@@ -16,6 +18,8 @@ app.use(cors());
 //router
 
 app.use("/api/v1/auth", AuthRouter);
+app.use("/api/v1/distributor", DistributorRouter);
+app.use("/api/v1/product", ProductrRouter);
 
 connectToDatabase();
 
