@@ -7,6 +7,8 @@ import "./models/associations.js";
 import AuthRouter from "./routes/auth.js";
 import UserRouter from "./routes/User.js";
 import ManagerRouter from "./routes/Manager.js";
+import DistributorRouter from "./routes/distributor.js";
+import ProductrRouter from "./routes/product.js";
 
 dotenv.config();
 
@@ -20,6 +22,8 @@ app.use(cors());
 app.use("/api/v1/auth", AuthRouter);
 app.use("/api/v1/user", UserRouter);
 app.use("/api/v1/manager", ManagerRouter);
+app.use("/api/v1/distributor", DistributorRouter);
+app.use("/api/v1/product", ProductrRouter);
 
 connectToDatabase();
 

@@ -11,12 +11,15 @@ products.init(
     },
     class: {
       type: DataTypes.STRING,
+      allowNull: false,
     },
     stock: {
       type: DataTypes.INTEGER,
+      allowNull: false,
     },
     price: {
       type: DataTypes.FLOAT,
+      allowNull: false,
     },
   },
   {
