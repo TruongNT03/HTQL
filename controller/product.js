@@ -40,7 +40,7 @@ const getAllProduct = async (req, res) => {
     data: products,
     currentPage: page,
     totalItem: allProduct.length,
-    totalPage: allProduct.length / pageSize,
+    totalPage: Math.ceil(allProduct.length / pageSize),
   });
 };
 
