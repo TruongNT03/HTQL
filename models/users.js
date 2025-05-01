@@ -8,15 +8,20 @@ users.init(
   {
     username: {
       type: DataTypes.STRING,
+      allowNull: false,
     },
     password: {
       type: DataTypes.STRING,
+      allowNull: false,
     },
     fullname: {
       type: DataTypes.STRING,
+      allowNull: false,
     },
     role: {
-      type: DataTypes.STRING,
+      type: DataTypes.ENUM("user", "admin"),
+      defaultValue: "user",
+      allowNull: false,
     },
     team_id: {
       type: DataTypes.INTEGER,
