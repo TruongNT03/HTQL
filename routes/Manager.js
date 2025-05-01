@@ -1,5 +1,5 @@
 import { Router } from "express";
-import * as Manager from "../controller/Manager.js";
+import * as Manager from "../controller/manager.js";
 import asyncHandler from "../middlewares/asyncHandler.js";
 
 const route = Router();
