@@ -1,7 +1,7 @@
 import db from "../models/index.js";
 
 const createTeam = async (req, res) => {
-    const { name, manager_id } = req.body;
+    const { name, manager_id, members } = req.body;
     try {
         console.log(req.body);
         const team = await db.teams.findOne({
@@ -13,8 +13,30 @@ const createTeam = async (req, res) => {
             return res.status(400).json({ message: "Team đã tồn tại" });
         }
         const newTeam = await db.teams.create({
-            ...req.body,
+            name,
+            manager_id,
         });
+        for (let i = 0; i < members.length; i++) {
+            // const member = members[i];
+            // await db.team_members.create({
+            //     team_id: newTeam.id,
+            //     user_id: member,
+            // });
+            try {
+                await db.users.update(
+                    { team_id: newTeam.id },
+                    {
+                        where: {
+                            id: members[i],
+                        },
+                    }
+                );
+            }
+            catch (error) {
+                console.log(error);
+                return res.status(500).json({ message: "Lỗi khi thêm thành viên vào team", error });
+            }
+        }
 
         res.status(201).json({
             message: "Tạo team thành công",
@@ -51,7 +73,6 @@ const deleteTeam = async (req, res) => {
 
 const getAllTeams = async (req, res) => {
     try {
-        console.log("log1");
         const teams = await db.teams.findAll({
             include: [
               {
@@ -67,7 +88,6 @@ const getAllTeams = async (req, res) => {
               },
             ],
           });
-        console.log("log2");
         res.status(200).json({ data: teams });
     } catch (error) {
         res.status(500).json({ message: "Lỗi khi lấy danh sách teams", error });
@@ -99,7 +119,15 @@ const getTeamById = async (req, res) => {
         if (!team) {
             return res.status(404).json({ message: "Team không tồn tại" });
         }
-        res.status(200).json({ data: team });
+
+        const members = await db.users.findAll({
+            where: {
+                team_id: id,
+            },
+            attributes: ["id", "username", "fullname"],
+        });
+
+        res.status(200).json({ team, members });
     } catch (error) {
         res.status(500).json({ message: "Lỗi khi lấy team", error });
     }
