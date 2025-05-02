@@ -80,4 +80,31 @@ const updateUser = async (req, res) => {
   return res.status(200).json({ message: "Cập nhập thành công!" });
 };
 
-export { register, login, updateUser };
+const getAllUsers = async (req, res) => {
+  console.log(req.body);
+  let { page = 1, sortBy = "id", sortOrder = "ASC" } = req.body;
+  page = page === "" || isNaN(page) ? 1 : Number.parseInt(page);
+  const pageSize = 10;
+  const offset = (page - 1) * pageSize;
+
+  try {
+    const users = await db.users.findAll({
+      attributes: ["id", "username", "fullname", "role"],
+      order: [[sortBy, sortOrder.toUpperCase()]],
+      limit: pageSize,
+      offset: offset,
+    });
+
+    return res.status(200).json({ 
+      message: "Thành công", 
+      data: users, 
+      pagination: { page, pageSize }
+    });
+  } catch (error) {
+    return res.status(500).json({ message: "Lỗi khi lấy danh sách users", error });
+  }
+};
+
+
+
+export { register, login, updateUser, getAllUsers };
