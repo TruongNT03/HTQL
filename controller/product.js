@@ -32,7 +32,6 @@ const getAllProduct = async (req, res) => {
   page === "" ? (page = 1) : (page = Number.parseInt(page));
   const pageSize = 10;
   const offset = (page - 1) * pageSize;
-  const allProduct = await db.products.findAll();
   const products = await db.products.findAll({
     where: {
       ...searchCondition,
@@ -40,6 +39,13 @@ const getAllProduct = async (req, res) => {
     attributes: ["id", "name", "class", "stock", "price"],
     limit: pageSize,
     offset: offset,
+    order: [[sortBy, sortOrder.toUpperCase()]],
+  });
+  const allProduct = await db.products.findAll({
+    where: {
+      ...searchCondition,
+    },
+    attributes: ["id", "name", "class", "stock", "price"],
     order: [[sortBy, sortOrder.toUpperCase()]],
   });
   return res.status(200).json({

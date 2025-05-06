@@ -1,6 +1,7 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
+import { Op } from "sequelize";
 
 dotenv.config();
 
@@ -21,6 +22,7 @@ const register = async (req, res) => {
     username,
     fullname,
     password: hashedPassword,
+    role: "user",
   });
 
   return res.status(201).json({
@@ -71,40 +73,75 @@ const login = async (req, res) => {
 };
 
 const updateUser = async (req, res) => {
-  const { id, role, team_id } = req.body;
+  const { id } = req.params;
+  const { role, team_id, fullname } = req.body;
+  console.log(team_id);
   const user = await db.users.findByPk(id);
   if (!user) {
     return res.status(401).json({ message: "Không tồn tại user!" });
   }
-  await user.update({ role, team_id });
+  if (team_id) {
+    const team = await db.teams.findByPk(team_id);
+    if (!team) {
+      return res.status(401).json({ message: "Không tồn tại team!" });
+    }
+  }
+
+  await user.update({ role: role, team_id: team_id, fullname: fullname });
   return res.status(200).json({ message: "Cập nhập thành công!" });
 };
 
 const getAllUsers = async (req, res) => {
-  console.log(req.body);
-  let { page = 1, sortBy = "id", sortOrder = "ASC" } = req.body;
-  page = page === "" || isNaN(page) ? 1 : Number.parseInt(page);
-  const pageSize = 10;
-  const offset = (page - 1) * pageSize;
+  const { keyword } = req.query;
 
-  try {
-    const users = await db.users.findAll({
-      attributes: ["id", "username", "fullname", "role"],
-      order: [[sortBy, sortOrder.toUpperCase()]],
-      limit: pageSize,
-      offset: offset,
-    });
+  const searchCondition = keyword
+    ? {
+        fullname: { [Op.like]: `%${keyword}%` },
+      }
+    : {};
 
-    return res.status(200).json({ 
-      message: "Thành công", 
-      data: users, 
-      pagination: { page, pageSize }
-    });
-  } catch (error) {
-    return res.status(500).json({ message: "Lỗi khi lấy danh sách users", error });
-  }
+  // let { page = 1, sortBy = "id", sortOrder = "ASC" } = req.body;
+  // page = page === "" || isNaN(page) ? 1 : Number.parseInt(page);
+  // const pageSize = 10;
+  // const offset = (page - 1) * pageSize;
+
+  const users = await db.users.findAll({
+    attributes: ["id", "username", "fullname", "role", "team_id"],
+    where: {
+      ...searchCondition,
+    },
+    include: [
+      {
+        model: db.teams,
+        attributes: ["name"],
+      },
+    ],
+    // order: [[sortBy, sortOrder.toUpperCase()]],
+    // limit: pageSize,
+    // offset: offset,
+  });
+  const usersRes = await Promise.all(
+    users.map(async (user) => {
+      // Nếu cần lấy thông tin team từ DB theo user.team_id
+      const team = user.team_id
+        ? await db.teams.findByPk(user.team_id, { attributes: ["name"] })
+        : null;
+
+      return {
+        id: user.id,
+        username: user.username,
+        fullname: user.fullname,
+        role: user.role,
+        team: team?.name || null,
+      };
+    })
+  );
+
+  return res.status(200).json({
+    message: "Thành công",
+    data: usersRes,
+    // pagination: { page, pageSize },
+  });
 };
-
-
 
 export { register, login, updateUser, getAllUsers };

@@ -1,3 +1,4 @@
+import { Op } from "sequelize";
 import db from "../models/index.js";
 
 const insertDistributor = async (req, res) => {
@@ -23,23 +24,40 @@ const insertDistributor = async (req, res) => {
 };
 
 const getAllDistributor = async (req, res) => {
-  let { page } = req.query;
+  let { page, keyword } = req.query;
   const pageSize = 10;
   page === "" ? (page = 1) : (page = parseInt(page));
   const offset = (page - 1) * pageSize;
-  const total = await db.distributors.count();
-  const totalPage = Math.ceil(total / pageSize);
+
+  const searchCondition = keyword
+    ? {
+        name: {
+          [Op.like]: `%${keyword}%`,
+        },
+      }
+    : {};
   const distributors = await db.distributors.findAll({
+    where: {
+      ...searchCondition,
+    },
     limit: pageSize,
     offset: offset,
     attributes: ["id", "name"],
   });
+  const count = await db.distributors.findAll({
+    where: {
+      ...searchCondition,
+    },
+    attributes: ["id", "name"],
+  });
+
+  const totalPage = Math.ceil(count / pageSize);
   return res.status(200).json({
     message: "Lấy danh sách thành công",
     data: distributors,
     currentPage: page,
     totalPage,
-    totalItems: total,
+    totalItems: count.length,
   });
 };
 

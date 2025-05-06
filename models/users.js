@@ -19,9 +19,11 @@ users.init(
       allowNull: false,
     },
     role: {
-      type: DataTypes.ENUM("user", "admin"),
-      defaultValue: "user",
-      allowNull: false,
+      type: DataTypes.STRING,
+      // defaultValue: "user",
+      // type: DataTypes.ENUM("user", "admin"),
+      // defaultValue: "user",
+      // allowNull: false,
     },
     team_id: {
       type: DataTypes.INTEGER,

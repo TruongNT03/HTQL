@@ -11,6 +11,7 @@ import DistributorRouter from "./routes/distributor.js";
 import ProductRouter from "./routes/product.js";
 import OrderRouter from "./routes/order.js";
 import CustomerRouter from "./routes/customer.js";
+import DashboardRouter from "./routes/dashboard.js";
 
 dotenv.config();
 
@@ -28,6 +29,7 @@ app.use("/api/v1/distributor", DistributorRouter);
 app.use("/api/v1/product", ProductRouter);
 app.use("/api/v1/order", OrderRouter);
 app.use("/api/v1/customer", CustomerRouter);
+app.use("/api/v1/dashboard", DashboardRouter);
 
 connectToDatabase();
 

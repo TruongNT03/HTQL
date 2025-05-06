@@ -8,22 +8,30 @@ db.teams.hasMany(db.users, {
   foreignKey: "team_id",
 });
 
+// user can be manager of team
+db.users.hasOne(db.teams, {
+  foreignKey: "manager_id",
+});
+db.teams.belongsTo(db.users, {
+  foreignKey: "manager_id",
+});
+
 // 1 team has 1 manager
-db.teams.belongsTo(db.managers, {
-  foreignKey: "manager_id",
-});
-db.managers.hasOne(db.teams, {
-  foreignKey: "manager_id",
-});
+// db.teams.belongsTo(db.managers, {
+//   foreignKey: "manager_id",
+// });
+// db.managers.hasOne(db.teams, {
+//   foreignKey: "manager_id",
+// });
 
 // 1 user 1 manager
-db.users.hasOne(db.managers, {
-  foreignKey: "user_id",
-});
+// db.users.hasOne(db.managers, {
+//   foreignKey: "user_id",
+// });
 
-db.managers.belongsTo(db.users, {
-  foreignKey: "user_id",
-});
+// db.managers.belongsTo(db.users, {
+//   foreignKey: "user_id",
+// });
 
 // order create by only 1 user
 db.users.hasMany(db.orders, {

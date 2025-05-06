@@ -9,11 +9,6 @@ const router = Router();
 router.post("/register", asyncHandler(AuthController.register));
 router.post("/login", asyncHandler(AuthController.login));
 router.get("/getAll", asyncHandler(AuthController.getAllUsers));
-router.put(
-  "/",
-  verifyToken,
-  authorization(["admin, user"]),
-  asyncHandler(AuthController.updateUser)
-);
+router.put("/:id", verifyToken, asyncHandler(AuthController.updateUser));
 
 export default router;
