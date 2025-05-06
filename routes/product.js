@@ -7,12 +7,9 @@ import authorization from "../middlewares/authorization.js";
 
 const router = Router();
 
-router.post(
-  "",
-  verifyToken,
-  authorization(["admin"]),
-  asyncHandler(ProductController.insertProduct)
-);
+router.post("", verifyToken, asyncHandler(ProductController.insertProduct));
 router.get("", verifyToken, asyncHandler(ProductController.getAllProduct));
+router.delete("", verifyToken, asyncHandler(ProductController.deleteProduct));
+router.put("", verifyToken, asyncHandler(ProductController.updateProduct));
 
 export default router;

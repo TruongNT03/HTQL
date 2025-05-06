@@ -10,6 +10,7 @@ import TeamRouter from "./routes/team.js";
 import DistributorRouter from "./routes/distributor.js";
 import ProductRouter from "./routes/product.js";
 import OrderRouter from "./routes/order.js";
+import CustomerRouter from "./routes/customer.js";
 
 dotenv.config();
 
@@ -26,6 +27,7 @@ app.use("/api/v1/team", TeamRouter);
 app.use("/api/v1/distributor", DistributorRouter);
 app.use("/api/v1/product", ProductRouter);
 app.use("/api/v1/order", OrderRouter);
+app.use("/api/v1/customer", CustomerRouter);
 
 connectToDatabase();
 

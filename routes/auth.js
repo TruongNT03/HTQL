@@ -12,9 +12,8 @@ router.get("/getAll", asyncHandler(AuthController.getAllUsers));
 router.put(
   "/",
   verifyToken,
-  authorization(["admin"]),
+  authorization(["admin, user"]),
   asyncHandler(AuthController.updateUser)
 );
-
 
 export default router;

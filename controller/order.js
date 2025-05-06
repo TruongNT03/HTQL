@@ -1,18 +1,21 @@
 import db from "../models/index.js";
 
+import dateFormat from "../utils/dateFormat.js";
+
 const insertOrder = async (req, res) => {
   const {
     customer_id,
     product_id,
     distributor_id,
     quantity,
-    name,
-    city,
-    channel,
-    sub_channel,
-    country,
-    latitude,
-    longitude,
+    newCustomer,
+    // name,
+    // city,
+    // channel,
+    // sub_channel,
+    // country,
+    // latitude,
+    // longitude,
   } = req.body;
   const user_id = req.user.id;
   let customer;
@@ -24,13 +27,7 @@ const insertOrder = async (req, res) => {
         .json({ message: "Không tồn tại khách hàng tương ứng!" });
   } else {
     customer = await db.customers.create({
-      name,
-      city,
-      channel,
-      sub_channel,
-      country,
-      latitude,
-      longitude,
+      ...newCustomer,
     });
   }
   if (!customer) {
@@ -64,7 +61,7 @@ const getAllOrder = async (req, res) => {
   const totalOrderCount = await db.orders.count();
 
   const orders = await db.orders.findAll({
-    attributes: ["id", "quantity"],
+    attributes: ["id", "quantity", "createdAt"],
     include: [
       {
         model: db.users,
@@ -94,6 +91,7 @@ const getAllOrder = async (req, res) => {
     distributor: order.distributor?.name || "",
     user: order.user?.fullname || "",
     quantity: order.quantity,
+    createdAt: dateFormat(order.createdAt),
   }));
 
   return res.status(200).json({

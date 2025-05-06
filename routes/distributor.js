@@ -10,8 +10,22 @@ const router = Router();
 router.post(
   "",
   verifyToken,
-  authorization(["admin"]),
   asyncHandler(DistributorController.insertDistributor)
+);
+router.get(
+  "",
+  verifyToken,
+  asyncHandler(DistributorController.getAllDistributor)
+);
+router.put(
+  "",
+  verifyToken,
+  asyncHandler(DistributorController.updateDistributor)
+);
+router.delete(
+  "",
+  verifyToken,
+  asyncHandler(DistributorController.deleteDistributor)
 );
 
 export default router;
